@@ -1,0 +1,53 @@
+{% extends 'with_model_formsets/layout.html' %}
+
+{% block styles %}
+
+    <style>
+
+        tr.highlighted {
+            background-color: #ff0000;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block main %}
+    <table>
+        <thead>
+
+            <tr>
+                {% for column in table.columns %}
+                    <th>
+                        <h1> {{ column.value }} </h1>
+                        {% if column.options.filterable %}
+                            <button>F</button>
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for row in table.rows %}
+                <tr class="{% if 'highlighted' in row.options %} highlighted {% endif %}">
+                    {% for cell in row.cells %}
+                        <td>
+                            {% if 'editable' in cell.options %}
+                                <input type="text" value="{{ cell.value }}">
+                            {% elif cell.options.action %}
+                                <button> {{ cell.value }} </button>
+                            {% else %}
+                                <p> {{ cell.value }} </p>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}

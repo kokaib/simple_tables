@@ -1,0 +1,171 @@
+{% extends 'add_update_separately/layout.html' %}
+
+{% block styles %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/general/general.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/general/buttons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/general/links.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/anim/slide-in-top.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/anim/slide-out-top.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/singleton-elements/close.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('add_update_separately/singleton-elements/popup/popup.css') }}">
+
+    <style>
+
+        tr {
+            cursor: pointer;
+        }
+
+        tr.highlighted {
+            background-color: #ff0000;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block templates %}
+
+    {{ super() }}
+
+    <template id="popup-template">
+        <div class="popup top animatable">
+            <div class="popup-content">
+                <div class="content"></div>
+                <button type="button" class="cancel" onclick="popup.removeInstance()"></button>
+            </div>            
+        </div>
+    </template>
+
+{% endblock %}
+
+{% block main %}
+
+    {{ super() }}
+
+    <button onclick="startAdd()">Add</button>
+
+    <table>
+        <thead>
+
+            <tr>
+                {% for column in table.columns %}
+                    <th>
+                        <h1> {{ column.value }} </h1>
+                        {% if 'filterable' in column.options %}
+                            <button>F</button>
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for row in table.rows %}
+                <tr id="{{ row.id }}" class="{% if 'highlighted' in row.options %} highlighted {% endif %}">
+                    {% for cell in row.cells %}
+                        <td>
+                            {% if 'action' in cell.options %}
+                                <button> {{ cell.value }} </button>
+                            {% else %}
+                                <p> {{ cell.value }} </p>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {{ super() }}
+
+    <script type="text/javascript" src="{{ static('add_update_separately/utils/create-element-from-template.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ static('add_update_separately/singleton-elements/singleton/singleton.js') }}"></script>
+    <script type="text/javascript" src="{{ static('add_update_separately/singleton-elements/singleton_element/singleton-element.js') }}"></script>
+    <script type="text/javascript" src="{{ static('add_update_separately/singleton-elements/singleton_element_with_dynamic_content/singleton-element-with-dynamic-content.js') }}"></script>
+    <script type="text/javascript" src="{{ static('add_update_separately/singleton-elements/popup/popup.js') }}"></script>
+
+    <script>
+
+        Array.from(
+            document.querySelectorAll('tr')
+        ).forEach(item => {
+            item.addEventListener('click', onRowClicked);
+        });
+
+        function onRowClicked(ev) {
+            var id = ev.target.closest('tr').id;
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var content = popup.instance.querySelector('.content');
+                    content.innerHTML = this.responseText;
+
+                    content.querySelector('form').action = `update-form/${id}`;
+                    
+                    showForm();
+                }
+            }
+            xhr.open('GET', `update-form/${id}`);
+            xhr.send();
+        }
+
+        function update() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    popup.removeInstance();
+                }
+            }
+            xhr.open('POST', `update-form/`);
+            xhr.send();
+        }
+
+        function startAdd() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var content = popup.instance.querySelector('.content');
+                    content.innerHTML = this.responseText;
+
+                    content.querySelector('form').action = 'add-form/';
+                    
+                    showForm();
+                }
+            }
+            xhr.open('GET', `add-form/`);
+            xhr.send();
+        }
+
+        function add() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    popup.removeInstance();
+                }
+            }
+            xhr.open('POST', `add-form/`);
+            xhr.send();
+        }
+
+        function showForm() {
+            popup.appendInstance();
+        }
+
+    </script>
+
+{% endblock %}

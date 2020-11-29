@@ -1,0 +1,29 @@
+a{
+  text-decoration: none;
+}
+
+a:link{
+
+}
+
+a:visited{
+
+}
+
+a:focus{
+
+}
+
+a:hover{
+
+}
+
+a:active{
+
+}
+
+a[href*="http"]{
+  background:url('../images/external-link.svg') no-repeat 100% 0;
+  background-size: 1em 1em;
+  padding-right: calc(1em + 4px);
+}
