@@ -1,0 +1,88 @@
+.translate-from-to {
+    --animation-name: translate-from-to;
+}
+
+@keyframes translate-from-to {
+    from {
+        -ms-transform: translate(var(--x-from), var(--y-from));
+        -o-transform: translate(var(--x-from), var(--y-from));
+        -moz-transform: translate(var(--x-from), var(--y-from));
+        -webkit-transform: translate(var(--x-from), var(--y-from));
+        transform: translate(var(--x-from), var(--y-from));
+    }
+    to {
+        -ms-transform: translate(var(--x-to), var(--y-to));
+        -o-transform: translate(var(--x-to), var(--y-to));
+        -moz-transform: translate(var(--x-to), var(--y-to));
+        -webkit-transform: translate(var(--x-to), var(--y-to));
+        transform: translate(var(--x-to), var(--y-to));
+    }
+}
+
+@-ms-keyframes translate-from-to {
+    from {
+        -ms-transform: translate(var(--x-from), var(--y-from));
+        -o-transform: translate(var(--x-from), var(--y-from));
+        -moz-transform: translate(var(--x-from), var(--y-from));
+        -webkit-transform: translate(var(--x-from), var(--y-from));
+        transform: translate(var(--x-from), var(--y-from));
+    }
+    to {
+        -ms-transform: translate(var(--x-to), var(--y-to));
+        -o-transform: translate(var(--x-to), var(--y-to));
+        -moz-transform: translate(var(--x-to), var(--y-to));
+        -webkit-transform: translate(var(--x-to), var(--y-to));
+        transform: translate(var(--x-to), var(--y-to));
+    }
+}
+
+@-o-keyframes translate-from-to {
+    from {
+        -ms-transform: translate(var(--x-from), var(--y-from));
+        -o-transform: translate(var(--x-from), var(--y-from));
+        -moz-transform: translate(var(--x-from), var(--y-from));
+        -webkit-transform: translate(var(--x-from), var(--y-from));
+        transform: translate(var(--x-from), var(--y-from));
+    }
+    to {
+        -ms-transform: translate(var(--x-to), var(--y-to));
+        -o-transform: translate(var(--x-to), var(--y-to));
+        -moz-transform: translate(var(--x-to), var(--y-to));
+        -webkit-transform: translate(var(--x-to), var(--y-to));
+        transform: translate(var(--x-to), var(--y-to));
+    }
+}
+
+@-moz-keyframes translate-from-to {
+    from {
+        -ms-transform: translate(var(--x-from), var(--y-from));
+        -o-transform: translate(var(--x-from), var(--y-from));
+        -moz-transform: translate(var(--x-from), var(--y-from));
+        -webkit-transform: translate(var(--x-from), var(--y-from));
+        transform: translate(var(--x-from), var(--y-from));
+    }
+    to {
+        -ms-transform: translate(var(--x-to), var(--y-to));
+        -o-transform: translate(var(--x-to), var(--y-to));
+        -moz-transform: translate(var(--x-to), var(--y-to));
+        -webkit-transform: translate(var(--x-to), var(--y-to));
+        transform: translate(var(--x-to), var(--y-to));
+    }
+}
+
+@-webkit-keyframes translate-from-to {
+    from {
+        -ms-transform: translate(var(--x-from), var(--y-from));
+        -o-transform: translate(var(--x-from), var(--y-from));
+        -moz-transform: translate(var(--x-from), var(--y-from));
+        -webkit-transform: translate(var(--x-from), var(--y-from));
+        transform: translate(var(--x-from), var(--y-from));
+    }
+    to {
+        -ms-transform: translate(var(--x-to), var(--y-to));
+        -o-transform: translate(var(--x-to), var(--y-to));
+        -moz-transform: translate(var(--x-to), var(--y-to));
+        -webkit-transform: translate(var(--x-to), var(--y-to));
+        transform: translate(var(--x-to), var(--y-to));
+    }
+}

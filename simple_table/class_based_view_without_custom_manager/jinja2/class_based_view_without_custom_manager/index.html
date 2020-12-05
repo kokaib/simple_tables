@@ -1,0 +1,270 @@
+{% extends 'class_based_view_without_custom_manager/layout.html' %}
+
+{% block styles %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/general/general.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/general/buttons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/general/links.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/anim/slide-in-top.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/anim/slide-out-top.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/singleton-elements/close.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/singleton-elements/popup/popup.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/table/table.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/form/css/form-base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/form/css/text-form-controls.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('class_based_view_without_custom_manager/form/css/checkable-form-controls.css') }}">
+
+    <style>
+
+
+
+    </style>
+
+{% endblock %}
+
+{% block templates %}
+
+    {{ super() }}
+
+    <template id="popup-template">
+        <div id="popup" class="popup top animatable">
+            <div class="popup-content">
+                <div class="content"></div>
+                <button type="button" class="cancel" onclick="popup.removeInstance()"></button>
+            </div>            
+        </div>
+    </template>
+
+{% endblock %}
+
+{% block main %}
+
+    {{ super() }}
+
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous() %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number() }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next() %}
+                <a href="?page={{ page_obj.next_page_number() }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+    <button onclick="startAdd()">Add</button>
+
+    <table>
+        <thead>
+
+            <tr>
+                {% for column in table_columns %}
+                    <th>
+                        <div>
+                            <h1> {{ column.display_name }} </h1>
+                            {% if 'filterable' in column.options %}
+                                {% if 'categorical' in column.options %}
+                                    <button id="{{ column.name }}" class="filter-button" onclick="filterColumnCategorical(event)"></button>
+                                {% elif 'range' in column.options %}
+                                    <button id="{{ column.name }}" class="filter-button" onclick="filterColumnCategorical(event)"></button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </th>
+                {% endfor %}
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if table_rows %}
+
+                {% for row in table_rows %}
+                    <tr id="{{ row.get_id() }}" class="{% if 'highlighted' in row.get_row_options() %}highlighted{% endif %}">
+                        {% for column in table_columns %}
+                            <td>{{ row[column.name] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+
+            {% else %}
+
+                <p>No records to display.</p>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {{ super() }}
+
+    <script type="text/javascript" src="{{ static('class_based_view_without_custom_manager/utils/create-element-from-template.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ static('class_based_view_without_custom_manager/cookies/cookies.js') }}"></script>
+
+    <script type="text/javascript" src="{{ static('class_based_view_without_custom_manager/singleton-elements/singleton/singleton.js') }}"></script>
+    <script type="text/javascript" src="{{ static('class_based_view_without_custom_manager/singleton-elements/singleton_element/singleton-element.js') }}"></script>
+    <script type="text/javascript" src="{{ static('class_based_view_without_custom_manager/singleton-elements/singleton_element_with_dynamic_content/singleton-element-with-dynamic-content.js') }}"></script>
+    <script type="text/javascript" src="{{ static('class_based_view_without_custom_manager/singleton-elements/popup/popup.js') }}"></script>
+
+    <script>
+
+        Array.from(
+            document.querySelectorAll('tbody tr')
+        ).forEach(item => {
+            item.addEventListener('click', onRowClicked);
+        });
+
+        function onRowClicked(ev) {
+            var id = ev.target.closest('tr').id;
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var content = popup.instance.querySelector('.content');
+                    content.innerHTML = this.responseText;
+
+                    var form = content.querySelector('form');
+                    form.action = `update/${id}`;
+                    form.addEventListener('submit', onAddUpdateFormSubmit, false);
+                    
+                    const isSuccesful = JSON.parse(content.querySelector('#form-status').textContent)['successful'];
+
+                    if (isSuccesful) {
+                        popup.removeInstance();
+                    } else {
+                        popup.appendInstance();
+                    }
+                }
+            }
+            xhr.open('GET', `update/${id}`);
+            xhr.send();
+        }
+
+        function startAdd() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var content = popup.instance.querySelector('.content');
+                    content.innerHTML = this.responseText;
+
+                    var form = content.querySelector('form');
+                    form.action = 'add/';
+                    form.addEventListener('submit', onAddUpdateFormSubmit, false);
+                    
+                    const isSuccesful = JSON.parse(content.querySelector('#form-status').textContent)['successful'];
+
+                    if (isSuccesful) {
+                        popup.removeInstance();
+                    } else {
+                        popup.appendInstance();
+                    }
+                }
+            }
+            xhr.open('GET', `add/`);
+            xhr.send();
+        }
+
+        function onAddUpdateFormSubmit(ev) {
+            ev.preventDefault();
+
+            const form = ev.target;
+
+            const formData = new FormData(form);
+            
+            const url = form.action;
+            const method = form.method;
+
+            const csrftoken = Cookies.getCookie('csrftoken');
+            const headers = {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+
+            fetch(
+                url,
+                {
+                    method: method,
+                    body: formData,
+                    headers: headers
+                }
+            )
+            .then(response => {
+                return response.text();
+            })
+            .then(x => {
+                onResponseAvailable(x);
+            })
+            .catch(e => {
+                onFailedResponse(e);
+            });
+        }
+
+        function onResponseAvailable(r) {
+            var content = popup.instance.querySelector('.content');
+            content.innerHTML = r;
+
+            var form = content.querySelector('form');
+            form.addEventListener('submit', onAddUpdateFormSubmit, false);
+            
+            const isSuccesful = JSON.parse(content.querySelector('#form-status').textContent)['successful'];
+
+            if (isSuccesful) {
+                popup.removeInstance();
+            } else {
+                popup.appendInstance();
+            }
+        }
+
+        function onFailedResponse(e) {
+            console.error(e);
+        }
+
+    </script>
+
+    <script>
+
+        function filterColumnCategorical(ev) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var content = popup.instance.querySelector('.content');
+                    content.innerHTML = this.responseText;
+                    
+                    var form = content.querySelector('form');
+                    
+                    popup.appendInstance();
+                }
+            }
+            xhr.open('GET', `filter-categorical/${ev.target.id}`);
+            xhr.send();
+        }
+
+        function filterColumnRange(ev) {
+
+        }
+
+    </script>
+
+{% endblock %}

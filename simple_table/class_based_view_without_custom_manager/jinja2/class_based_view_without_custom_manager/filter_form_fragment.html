@@ -1,0 +1,31 @@
+<form id="filter-form" method="GET">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    
+    <div class="input-field">
+
+        <label>{{ filter.name }}</label>
+
+        <ul class="input-container">
+    
+            {% for value in filter.vals %}
+
+                <li>
+
+                    <input type="checkbox" id="{{ value }}" name="{{ filter.name }}" value="{{ value }}" class="toggler">
+                    <label for="{{ value }}">{{ value }}</label>
+
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+    <button type="submit">OK</button>
+
+    <button type="button">Select all</button>
+
+    <button type="reset">Deselect all</button>
+
+</form>

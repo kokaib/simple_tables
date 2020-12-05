@@ -1,0 +1,41 @@
+input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+  height:8px;
+  padding:4px;
+  outline:none;
+  border-radius:4px;
+  background-color: #ccc;
+}
+
+input[type="range"].zoom-range{
+  z-index:3;
+  position:absolute;
+  width:128px;
+  right:-32px;
+  bottom:calc(50% + 64px);
+
+  -webkit-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -moz-transform:rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+input[type="range"]::-moz-range-thumb{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  cursor:pointer;
+  background-color:#eb346b;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  cursor:pointer;
+  background-color:#eb346b;
+}

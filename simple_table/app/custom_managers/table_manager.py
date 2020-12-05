@@ -16,6 +16,7 @@ class TableManager(models.Manager):
                 'columns': [
                     {
                         'value': col,
+                        'display_name': col,
                         'options': self.model.get_column_options(col)
                     } for col in self.model.get_table_columns()
                 ],

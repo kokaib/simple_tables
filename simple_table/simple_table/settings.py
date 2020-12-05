@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'app',
     'add_update_separately',
     'with_model_formsets',
+    'class_based_view_without_custom_manager',
 ]
 
 MIDDLEWARE = [

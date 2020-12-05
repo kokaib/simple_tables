@@ -1,0 +1,89 @@
+.shrink{
+  --downscale: 0.1;
+  --animation-name: shrink;
+}
+
+@-ms-keyframes shrink{
+  from {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  to {
+    -webkit-transform: scale(var(--downscale));
+    -ms-transform: scale(var(--downscale));
+    -o-transform: scale(var(--downscale));
+    -moz-transform: scale(var(--downscale));
+    transform: scale(var(--downscale));
+  }
+}
+
+@-o-keyframes shrink{
+  from {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  to {
+    -webkit-transform: scale(var(--downscale));
+    -ms-transform: scale(var(--downscale));
+    -o-transform: scale(var(--downscale));
+    -moz-transform: scale(var(--downscale));
+    transform: scale(var(--downscale));
+  }
+}
+
+@-moz-keyframes shrink{
+  from {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  to {
+    -webkit-transform: scale(var(--downscale));
+    -ms-transform: scale(var(--downscale));
+    -o-transform: scale(var(--downscale));
+    -moz-transform: scale(var(--downscale));
+    transform: scale(var(--downscale));
+  }
+}
+
+@-webkit-keyframes shrink{
+  from {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  to {
+    -webkit-transform: scale(var(--downscale));
+    -ms-transform: scale(var(--downscale));
+    -o-transform: scale(var(--downscale));
+    -moz-transform: scale(var(--downscale));
+    transform: scale(var(--downscale));
+  }
+}
+
+@keyframes shrink{
+  from {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+  to {
+    -webkit-transform: scale(var(--downscale));
+    -ms-transform: scale(var(--downscale));
+    -o-transform: scale(var(--downscale));
+    -moz-transform: scale(var(--downscale));
+    transform: scale(var(--downscale));
+  }
+}

@@ -1,0 +1,7 @@
+tr {
+    cursor: pointer;
+}
+
+tr.highlighted {
+    background-color: #ff0000;
+}
