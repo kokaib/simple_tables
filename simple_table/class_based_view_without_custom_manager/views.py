@@ -10,6 +10,12 @@ from .forms import Model2Form
 # Create your views here.
 
 
+def index(request):
+    context = {}
+    context['title'] = 'Simple Table'
+    return render(request, 'class_based_view_without_custom_manager/index.html', context)
+
+
 class TableView(generic.ListView):
     model = Model2
     paginate_by = 3

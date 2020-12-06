@@ -18,6 +18,7 @@
     border-radius: 16px;
     background-color: #fff;
     box-shadow: 0 0 16px #000;
+    overflow: auto;
 }
 
 .popup.left.appending {

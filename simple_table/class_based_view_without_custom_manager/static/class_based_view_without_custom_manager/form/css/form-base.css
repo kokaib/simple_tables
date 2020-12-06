@@ -1,9 +1,9 @@
-form{
+form {
   width: 100%;
   box-sizing: border-box;
 }
 
-form .form-content{
+form .form-content {
   margin: auto;
   padding: 0.5rem;
 }
@@ -87,14 +87,6 @@ select {
 input:not([type="checkbox"]):not([type="radio"]):not([type="image"]):not([type="file"]):not([type="color"]):not([type="range"]), select, textarea, progress, meter{
   border: none;
   outline: none;
-}
-
-input:not([type="password"]):not([type="search"]):not([type="checkbox"]):not([type="radio"]):not([type="image"]), select, textarea, progress, meter{
-  width:calc(100% - 16px);
-}
-
-input[type="password"], input[type="search"]{
-  width: calc(100% - 2rem - 20px);
 }
 
 input:not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="image"]):not([type="file"]):not([type="color"]):not([type="range"]):focus, textarea:focus{

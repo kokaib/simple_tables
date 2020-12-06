@@ -26,6 +26,14 @@ footer {
   box-shadow: 0 0 8px #000;
 }
 
+.inline {
+  display: inline;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
 .float-left {
   float: left;
 }

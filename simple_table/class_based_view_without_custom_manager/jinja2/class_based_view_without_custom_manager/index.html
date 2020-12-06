@@ -48,76 +48,93 @@
 
     {{ super() }}
 
+    <div id="table-container">
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous() %}
-                <a href="?page=1{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number() }}{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">previous</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        <div class="pagination">
+            <span class="step">
+                {% if page_obj.has_previous() %}
+                    <button onclick="pageTo(1)">&laquo;</button>
+                    <button onclick="pageTo({{ page_obj.previous_page_number() }})">&lsaquo;</button>
+                    {#
+                        <a href="?page=1{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number() }}{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">previous</a>
+                    #}
+                {% endif %}
+        
+                <span class="current">
+                    <form class="inline">
+                        <div class="input-container inline-block">
+                            <input class="inline" type="number" min="0" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
+                        </div>
+                        / {{ page_obj.paginator.num_pages }}
+                        <button type="submit">Go</button>
+                    </form>
+                </span>
+        
+                {% if page_obj.has_next() %}
+                    <button onclick="pageTo({{ page_obj.next_page_number() }})">&rsaquo;</button>
+                    <button onclick="pageTo({{ page_obj.paginator.num_pages }})">&raquo;</button>
+                    {#
+                        <a href="?page={{ page_obj.next_page_number() }}{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">last &raquo;</a>
+                    #}
+                {% endif %}
             </span>
-    
-            {% if page_obj.has_next() %}
-                <a href="?page={{ page_obj.next_page_number() }}{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}{% for k, v in request.GET.items() %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+        </div>
 
 
-    <button onclick="startAdd()">Add</button>
+        <button onclick="startAdd()">Add</button>
 
 
-    <table>
-        <thead>
+        <table>
+            <thead>
 
-            <tr>
-                {% for column in table_columns %}
-                    <th>
-                        <div>
-                            <h1> {{ column.display_name }} </h1>
-                            {% if 'filterable' in column.options %}
-                                {% if 'categorical' in column.options %}
-                                    <button id="{{ column.name }}" class="filter-button" onclick="filterColumnCategorical(event)"></button>
-                                {% elif 'range' in column.options %}
-                                    {% if 'range_number' in column.options %}
-                                        <button id="{{ column.name }}" class="filter-button" onclick="filterColumnRangeNumber(event)"></button>
-                                    {% elif 'range_date' in column.options %}
-                                        <button id="{{ column.name }}" class="filter-button" onclick="filterColumnRangeDate(event)"></button>
+                <tr>
+                    {% for column in table_columns %}
+                        <th>
+                            <div>
+                                <h1> {{ column.display_name }} </h1>
+                                {% if 'filterable' in column.options %}
+                                    {% if 'categorical' in column.options %}
+                                        <button id="{{ column.name }}" class="filter-button" onclick="filterColumnCategorical(event)"></button>
+                                    {% elif 'range' in column.options %}
+                                        {% if 'range_number' in column.options %}
+                                            <button id="{{ column.name }}" class="filter-button" onclick="filterColumnRangeNumber(event)"></button>
+                                        {% elif 'range_date' in column.options %}
+                                            <button id="{{ column.name }}" class="filter-button" onclick="filterColumnRangeDate(event)"></button>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        </div>
-                    </th>
-                {% endfor %}
-            </tr>
+                            </div>
+                        </th>
+                    {% endfor %}
+                </tr>
 
-        </thead>
+            </thead>
 
-        <tbody>
+            <tbody>
 
-            {% if table_rows %}
+                {% if table_rows %}
 
-                {% for row in table_rows %}
-                    <tr id="{{ row.get_id() }}" class="animatable {% if 'highlighted' in row.get_row_options() %}highlighted{% endif %}">
-                        {% for column in table_columns %}
-                            <td>{{ row[column.name] }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
+                    {% for row in table_rows %}
+                        <tr id="{{ row.get_id() }}" class="animatable {% if 'highlighted' in row.get_row_options() %}highlighted{% endif %}" onclick="onRowClicked(event)">
+                            {% for column in table_columns %}
+                                <td>{{ row[column.name] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
 
-            {% else %}
+                {% else %}
 
-                <p>No records to display.</p>
+                    <p>No records to display.</p>
 
-            {% endif %}
+                {% endif %}
 
-        </tbody>
+            </tbody>
 
-    </table>
+        </table>
+
+    </div>
 
 {% endblock %}
 
@@ -136,14 +153,25 @@
 
     <script>
 
-        Array.from(
-            document.querySelectorAll('tbody tr')
-        ).forEach(item => {
-            item.addEventListener('click', onRowClicked);
-        });
+        function pageTo(n) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var tableContainer = document.querySelector('#table-container');
+                    tableContainer.innerHTML = this.responseText;
+                }
+            }
+            xhr.open('GET', `table?page=${n}{% for k, l in request.GET.lists() %}{% if k != 'page' %}{% for v in l %}&{{ k }}={{ v }}{% endfor %}{% endif %}{% endfor %}`);
+            xhr.send();
+        }
 
+    </script>
+
+    <script>
 
         function onRowClicked(ev) {
+            console.log('on row clicked');
+
             var id = ev.target.closest('tr').id;
 
             var xhr = new XMLHttpRequest();
