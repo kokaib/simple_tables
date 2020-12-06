@@ -38,9 +38,17 @@ tbody {
     background-attachment: local, local, scroll, scroll;
 }
 
+tbody tr:hover {
+    -webkit-filter: brightness(80%);
+    filter: brightness(80%);
+}
+
 tr {
     border-bottom: 1px solid;
     cursor: pointer;
+    background-color: #eee;
+    --animation-name: fade-in;
+    --animation-duration: 375ms;
 }
 
 tr.highlighted {

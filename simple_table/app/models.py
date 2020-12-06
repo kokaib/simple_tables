@@ -95,11 +95,17 @@ class Model2(TableModelBase):
 
     @staticmethod
     def get_column_options(column):
+        # TODO: options should probably rather be a dict
+
         options = []
 
-        if column in ('field1', 'field2'):
+        if column == 'field1':
             options.append('filterable')
             options.append('categorical')
+        elif column == 'field2':
+            options.append('filterable')
+            options.append('range')
+            options.append('range_number')
         
         return options
 

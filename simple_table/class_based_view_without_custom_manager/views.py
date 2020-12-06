@@ -1,3 +1,5 @@
+import datetime
+
 from django.views import generic
 from django.shortcuts import render
 
@@ -16,14 +18,21 @@ class TableView(generic.ListView):
 
     def get_queryset(self):
         filter_expr = {}
-        for field_name in [x['name'] for x in self.model.get_table_columns()]:
-            filtered_values = self.request.GET.getlist(field_name)
-            print(filtered_values)
-            if filtered_values:
-                filter_expr[f'{field_name}__in'] = filtered_values
-        print(filter_expr)
+        # TODO: 1) eliminate double iteration
+        #       2) DRY with options
+        for field_name in [x['name'] for x in self.model.get_table_columns() if 'filterable' in self.model.get_column_options(x['name'])]:
+            options = self.model.get_column_options(field_name)
+            if 'categorical' in options:
+                filtered_values = self.request.GET.getlist(field_name)
+                if filtered_values:
+                    filter_expr[f'{field_name}__in'] = filtered_values
+            elif 'range' in options:
+                filter_from = self.request.GET.get(f'{field_name}_from')
+                filter_to = self.request.GET.get(f'{field_name}_to')
+                if filter_from and filter_to:
+                    filter_expr[f'{field_name}__range'] = (filter_from, filter_to)
+
         queryset = self.model.objects.filter(**filter_expr)
-        print(queryset)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -79,8 +88,42 @@ def filter_categorical(request, field_name):
         'name': field_name,
         'vals': Model2.objects.order_by().values_list(field_name, flat=True).distinct(),
     }
-    return render(request, 'class_based_view_without_custom_manager/filter_form_fragment.html', context)
+    return render(request, 'class_based_view_without_custom_manager/categorical_filter_form_fragment.html', context)
 
 
-def filter_range(request, field_name):
-    pass
+def filter_range_number(request, field_name):
+    context = {}
+    context['form_fields'] = {
+        'from': {
+            'id': f'{field_name}_from',
+            'name': f'{field_name}_from',
+            'label': 'From:',
+            'default': 0,
+        },
+        'to': {
+            'id': f'{field_name}_to',
+            'name': f'{field_name}_to',
+            'label': 'To:',
+            'default': 100,
+        }
+    }
+    return render(request, 'class_based_view_without_custom_manager/range_number_filter_form_fragment.html', context)
+
+
+def filter_range_date(request, field_name):
+    context = {}
+    context['form_fields'] = {
+        'from': {
+            'id': f'{field_name}_from',
+            'name': f'{field_name}_from',
+            'label': 'From:',
+            'default': datetime.datetime(1900, 1, 1),
+        },
+        'to': {
+            'id': f'{field_name}_to',
+            'name': f'{field_name}_to',
+            'label': 'To:',
+            'default': datetime.datetime.now(),
+        }
+    }
+    return render(request, 'class_based_view_without_custom_manager/range_date_filter_form_fragment.html', context)
