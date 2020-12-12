@@ -18,6 +18,49 @@ input[type="checkbox"], input[type="radio"]{
   vertical-align:middle;
 }
 
+ul.input-container.toggler input[type="checkbox"],
+ul.input-container.toggler input[type="radio"] {
+  -webkit-appearance:none;
+  appearance:none;
+  width:32px;
+  height:16px;
+  border-radius:8px;
+  border:1px solid #e1e1e1;
+  outline:none;
+  background-color:#ccc;
+  position:relative;
+}
+
+ul.input-container.toggler input[type="checkbox"]:checked,
+ul.input-container.toggler input[type="radio"]:checked {
+  background-color:#ff595f;
+}
+
+ul.input-container.toggler input[type="checkbox"]::before,
+ul.input-container.toggler input[type="radio"]::before {
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1px solid #ccc;
+  position:absolute;
+  content:'';
+  top:-2px;
+  left:-3px;
+  background-color:#eb346b;
+  --transition-duration: 375ms;
+  -webkit-transition: all var(--transition-duration);
+  -ms-transition: all var(--transition-duration);
+  -o-transition: all var(--transition-duration);
+  -moz-transition: all var(--transition-duration);
+  transition: all var(--transition-duration);
+}
+
+ul.input-container.toggler input[type="checkbox"]:checked::before,
+ul.input-container.toggler input[type="radio"]:checked::before {
+  left:calc(100% - 16px);
+}
+
+
 input[type="checkbox"].toggler, input[type="radio"].toggler{
   -webkit-appearance:none;
   appearance:none;
@@ -44,12 +87,12 @@ input[type="checkbox"].toggler::before,input[type="radio"].toggler::before{
   top:-2px;
   left:-3px;
   background-color:#eb346b;
-
-  -webkit-transition: all 376ms;
-  -ms-transition: all 376ms;
-  -o-transition: all 376ms;
-  -moz-transition: all 376ms;
-  transition: all 376ms;
+  --transition-duration: 375ms;
+  -webkit-transition: all var(--transition-duration);
+  -ms-transition: all var(--transition-duration);
+  -o-transition: all var(--transition-duration);
+  -moz-transition: all var(--transition-duration);
+  transition: all var(--transition-duration);
 }
 
 input[type="checkbox"]:checked.toggler::before, input[type="radio"]:checked.toggler::before{

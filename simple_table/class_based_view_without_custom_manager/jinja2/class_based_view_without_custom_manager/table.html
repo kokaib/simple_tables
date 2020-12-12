@@ -1,0 +1,84 @@
+<header>
+
+    <div class="pagination">
+        <span class="step">
+            {% if page_obj.has_previous() %}
+                <button onclick="tableWindow.pageTo(1)">&laquo;</button>
+                <button onclick="tableWindow.pageTo({{ page_obj.previous_page_number() }})">&lsaquo;</button>
+            {% endif %}
+
+            <span class="current">
+                <div class="inline">
+                    <div class="input-container inline-block">
+                        <input id="seeker" class="inline" type="number" min="0" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
+                    </div>
+                    / {{ page_obj.paginator.num_pages }}
+                    <button onclick="tableWindow.pageTo(document.querySelector('#seeker').value)">Go</button>
+                </div>
+            </span>
+
+            {% if page_obj.has_next() %}
+                <button onclick="tableWindow.pageTo({{ page_obj.next_page_number() }})">&rsaquo;</button>
+                <button onclick="tableWindow.pageTo({{ page_obj.paginator.num_pages }})">&raquo;</button>
+            {% endif %}
+        </span>
+    </div>
+
+</header>
+
+
+<button onclick="tableWindow.startAdd()">Add</button>
+
+<main class="table-wrapper">
+
+    <table>
+        <thead>
+
+            <tr>
+                {% for column in table_columns %}
+                    <th>
+                        <div>
+                            <div class="column-name-wrapper">
+                                <h1> {{ column.display_name }} </h1>
+                            </div>
+                            {% if 'filterable' in column.options %}
+                                {% if 'categorical' in column.options %}
+                                    <button id="{{ column.name }}" class="filter-button" onclick="tableWindow.filterColumnCategorical(event)"></button>
+                                {% elif 'range' in column.options %}
+                                    {% if 'range_number' in column.options %}
+                                        <button id="{{ column.name }}" class="filter-button" onclick="tableWindow.filterColumnRangeNumber(event)"></button>
+                                    {% elif 'range_date' in column.options %}
+                                        <button id="{{ column.name }}" class="filter-button" onclick="tableWindow.filterColumnRangeDate(event)"></button>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </th>
+                {% endfor %}
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if table_rows %}
+
+                {% for row in table_rows %}
+                    <tr id="{{ row.get_id() }}" class="animatable {% if 'highlighted' in row.get_row_options() %}highlighted{% endif %}" onclick="tableWindow.startUpdate(event)">
+                        {% for column in table_columns %}
+                            <td>{{ row[column.name] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+
+            {% else %}
+
+                <td colspan="{{ table_columns|length }}">No records to display.</td>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</main>

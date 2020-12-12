@@ -3,9 +3,19 @@ form {
   box-sizing: border-box;
 }
 
-form .form-content {
-  margin: auto;
-  padding: 0.5rem;
+.errorlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #ff0000;
+}
+
+.errorlist.nonfield {
+
+}
+
+.helptext {
+  
 }
 
 fieldset{

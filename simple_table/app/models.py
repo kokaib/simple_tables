@@ -103,6 +103,7 @@ class Model2(TableModelBase):
             options.append('filterable')
             options.append('categorical')
         elif column == 'field2':
+            options.append('orderable')
             options.append('filterable')
             options.append('range')
             options.append('range_number')

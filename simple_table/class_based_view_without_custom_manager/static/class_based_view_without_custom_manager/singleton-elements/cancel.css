@@ -1,10 +1,11 @@
+.cancel-container {
+    text-align: right;
+}
+
 .cancel {
     --cancel-size: 2.5rem;
-    position: absolute;
-    top: var(--cancel-top);
-    right: var(--cancel-right);
     padding: 0;
-    margin: 0;
+    margin: var(--cancel-top) var(--cancel-right);
     cursor: pointer;
     border-radius: 50%;
     background-color: #fff;
