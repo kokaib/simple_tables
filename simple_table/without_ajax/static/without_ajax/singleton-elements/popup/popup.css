@@ -1,0 +1,54 @@
+.popup {
+    --animation-duration: 750ms;
+    --cancel-top: 0.5rem;
+    --cancel-right: 0.5rem;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.popup-content {
+    --margin: 4rem;
+    position: relative;
+    width: calc(100% - 2 * var(--margin));
+    height: calc(100% - 2 * var(--margin));
+    margin: var(--margin);
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 0 16px #000;
+    overflow: auto;
+}
+
+.popup.left.appending {
+    --animation-name: slide-in-left;
+}
+
+.popup.left.removing {
+    --animation-name: slide-out-left;
+}
+
+.popup.top.appending {
+    --animation-name: slide-in-top;
+}
+
+.popup.top.removing {
+    --animation-name: slide-out-top;
+}
+
+.popup.right.appending {
+    --animation-name: slide-in-right;
+}
+
+.popup.right.removing {
+    --animation-name: slide-out-right;
+}
+
+.popup.bottom.appending {
+    --animation-name: slide-in-bottom;
+}
+
+.popup.bottom.removing {
+    --animation-name: slide-out-bottom;
+}

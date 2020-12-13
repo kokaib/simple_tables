@@ -1,0 +1,35 @@
+{% extends 'without_ajax/form-layout.html' %}
+
+{% block main %}
+
+    {{ super() }}
+    
+    <form id="filter-form" method="GET" action="{{ action }}">
+        
+        <input type="hidden" name="state" value="{{ state }}">
+    
+        {% for field in form %}
+
+            <div class="input-field">
+                
+                {{ field.label_tag() }}
+
+                <div class="input-container flex">
+                    {{ field }}
+                </div>
+                
+                {{ field.errors }}
+
+            </div>
+
+        {% endfor %}
+
+        {{ form.non_field_errors() }}
+
+        <button type="submit">OK</button>
+
+        <button type="reset">Reset</button>
+
+    </form>
+
+{% endblock %}

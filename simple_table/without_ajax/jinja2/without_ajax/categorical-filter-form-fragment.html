@@ -1,0 +1,67 @@
+{% extends 'without_ajax/form-layout.html' %}
+
+{% block main %}
+
+    {{ super() }}
+    
+    <form id="filter-form" method="GET" action="{{ action }}">
+        
+        <input type="hidden" name="state" value="{{ state }}">
+
+        {% for field in form %}
+
+            <div class="input-field">
+
+                <label>{{ field.name }}</label>
+
+                <ul class="input-container toggler">
+            
+                    {% for filter in field %}
+
+                        {% if filter.data %}
+
+                            <li>
+
+                                <label for="{{ filter.data.attrs.id }}">
+                                    <input type="checkbox" name="{{ filter.data.name }}" value="{{ filter.data.label }}" id="{{ filter.data.attrs.id }}" {% if filter.data.selected %}checked{% endif %}>
+                                    {{ filter.data.label }}
+                                </label>
+
+                            </li>
+
+                        {% else %}
+
+                            {# TODO: some graceful fallback.. #}
+                            
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                </ul>
+
+                {{ field.errors }}
+
+            </div>
+
+        {% endfor %}
+
+        {{ form.non_field_errors() }}
+
+        <button type="submit">OK</button>
+
+        <button type="button" onclick="selectAll(event, 'form')">Select all</button>
+
+        <button type="reset">Deselect all</button>
+
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {{ super() }}
+
+    <script type="text/javascript" src="{{ static('without_ajax/form/js/select-all-checkboxes.js') }}"></script>
+
+{% endblock %}

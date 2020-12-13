@@ -1,14 +1,17 @@
 import datetime
 
+from .utils import qs2dict, dict2qs, merge_qss, get_model
+
 from django.db.models import Max, Min
 from django.template.response import TemplateResponse
 from django.http import JsonResponse
 from django.http import HttpResponseBadRequest
 
+from django.urls import reverse
 from django.views import generic
 from django.shortcuts import render
 
-from app.models import Model2, Model2, Model3
+from app.models import Model2
 
 from .forms import Model2Form, CategoricalFilterForm, RangeNumberFilterForm, RangeDateFilterForm
 
@@ -87,7 +90,7 @@ def update_form(request, pk):
     
     context['form'] = form
 
-    t = TemplateResponse(request, 'class_based_view_without_custom_manager/form_fragment.html', context)
+    t = TemplateResponse(request, 'class_based_view_without_custom_manager/form-fragment.html', context)
     t.render()
 
     return JsonResponse(
@@ -115,7 +118,7 @@ def add_form(request):
 
     context['form'] = form
 
-    t = TemplateResponse(request, 'class_based_view_without_custom_manager/form_fragment.html', context)
+    t = TemplateResponse(request, 'class_based_view_without_custom_manager/form-fragment.html', context)
     t.render()
 
     return JsonResponse(
@@ -130,14 +133,41 @@ def add_form(request):
     )
 
 
-def get_model(model_name):
-    if model_name == 'Model2':
-        return Model2
+def filter_categorical_entrypoint(request, model_name, field_name):
+    if request.method == 'GET':
+        context = {}
 
+        model = get_model(model_name)
+
+        # list of tuples: [(label1, value1), (label2, value2), ... ]
+        choices = [(v, v) for v in model.objects.order_by().values_list(field_name, flat=True).distinct()]
+
+        if request.GET:
+            form = CategoricalFilterForm(request.GET, field_name=field_name, choices=choices)
+        else:
+            form = CategoricalFilterForm(field_name=field_name, choices=choices)
+
+        context['form'] = form
+        context['action'] = reverse('filter-categorical-a', args=(model_name, field_name))
+
+        t = TemplateResponse(request, 'class_based_view_without_custom_manager/categorical-filter-form-fragment.html', context)
+        t.render()
+
+        return JsonResponse(
+            {
+                'id': 'table',
+                'data': {
+                    'request_get': request.GET.urlencode(),
+                    'is_successful': False,
+                    'response_text': t.content.decode('utf-8'),
+                }
+            }
+        )
+    
+    return HttpResponseBadRequest()
 
 def filter_categorical(request, model_name, field_name):
     if request.method == 'GET':
-        
         context = {}
 
         model = get_model(model_name)
@@ -153,6 +183,7 @@ def filter_categorical(request, model_name, field_name):
             form = CategoricalFilterForm(field_name=field_name, choices=choices)
 
         context['form'] = form
+        context['action'] = reverse('filter-categorical-a', args=(model_name, field_name))
 
         t = TemplateResponse(request, 'class_based_view_without_custom_manager/categorical-filter-form-fragment.html', context)
         t.render()
@@ -171,25 +202,59 @@ def filter_categorical(request, model_name, field_name):
     return HttpResponseBadRequest()
 
 
+def filter_range_number_entrypoint(request, model_name, field_name):
+    if request.method == 'GET':
+        context = {}
+
+        model = get_model(model_name)
+        
+        if request.GET and request.GET.get('from_') and request.GET.get('to_'):
+            form = RangeNumberFilterForm(request.GET)
+        else:
+            default_from = model.objects.aggregate(Min(field_name))[f'{field_name}__min']
+            default_to = model.objects.aggregate(Max(field_name))[f'{field_name}__max']
+
+            form = RangeNumberFilterForm(initial={'from_': default_from, 'to_': default_to})
+
+        context['form'] = form
+        context['action'] = reverse('filter-range-number-a', args=(model_name, field_name))
+
+        t = TemplateResponse(request, 'class_based_view_without_custom_manager/range-filter-form-fragment.html', context)
+        t.render()
+
+        return JsonResponse(
+            {
+                'id': 'table',
+                'data': {
+                    'request_get': request.GET.urlencode(),
+                    'is_successful': False,
+                    'response_text': t.content.decode('utf-8'),
+                }
+            }
+        )
+    
+    return HttpResponseBadRequest()
+
 def filter_range_number(request, model_name, field_name):
     if request.method == 'GET':
         context = {}
 
         model = get_model(model_name)
 
-        default_from = model.objects.aggregate(Min(field_name))[f'{field_name}__min']
-        default_to = model.objects.aggregate(Max(field_name))[f'{field_name}__max']
-        
         if request.GET and request.GET.get('from_') and request.GET.get('to_'):
-            form = RangeNumberFilterForm(initial={'from_': request.GET.get('from_'), 'to_': request.GET.get('to_')})
+            form = RangeNumberFilterForm(request.GET)
             if form.is_valid():
                 return TableView.as_view()(request)
         else:
+            default_from = model.objects.aggregate(Min(field_name))[f'{field_name}__min']
+            default_to = model.objects.aggregate(Max(field_name))[f'{field_name}__max']
+        
             form = RangeNumberFilterForm(initial={'from_': default_from, 'to_': default_to})
 
         context['form'] = form
+        context['action'] = reverse('filter-range-number-a', args=(model_name, field_name))
 
-        t = TemplateResponse(request, 'class_based_view_without_custom_manager/range-number-filter-form-fragment.html', context)
+        t = TemplateResponse(request, 'class_based_view_without_custom_manager/range-filter-form-fragment.html', context)
         t.render()
 
         return JsonResponse(
@@ -206,26 +271,61 @@ def filter_range_number(request, model_name, field_name):
     return HttpResponseBadRequest()
 
 
-def filter_range_date(request, model_name, field_name):
+def filter_range_date_entrypoint(request, model_name, field_name):
     if request.method == 'GET':
         context = {}
 
         model = get_model(model_name)
 
-        default_from = model.objects.aggregate(Min(field_name))[f'{field_name}__min']
-        default_to = model.objects.aggregate(Max(field_name))[f'{field_name}__max']
-        
         if request.GET and request.GET.get('from_') and request.GET.get('to_'):
-            form = RangeDateFilterForm(initial={'from_': request.GET.get('from_'), 'to_': request.GET.get('to_')})
-            if form.is_valid():
-                return TableView.as_view()(request)
+            form = RangeDateFilterForm(request.GET)
         else:
+            default_from = model.objects.aggregate(Min(field_name))[f'{field_name}__min']
+            default_to = model.objects.aggregate(Max(field_name))[f'{field_name}__max']
+        
             form = RangeDateFilterForm(initial={'from_': default_from, 'to_': default_to})
             context['form_status'] = { 'successful': False }
 
         context['form'] = form
+        context['action'] = reverse('filter-range-date-a', args=(model_name, field_name))
 
-        t = TemplateResponse(request, 'class_based_view_without_custom_manager/range-date-filter-form-fragment.html', context)
+        t = TemplateResponse(request, 'class_based_view_without_custom_manager/range-filter-form-fragment.html', context)
+        t.render()
+
+        return JsonResponse(
+            {
+                'id': 'table',
+                'data': {
+                    'request_get': request.GET.urlencode(),
+                    'is_successful': False,
+                    'response_text': t.content.decode('utf-8'),
+                }
+            }
+        )
+    
+    return HttpResponseBadRequest()
+
+def filter_range_date(request, model_name, field_name):
+    if request.method == 'GET':
+        context = {}
+
+        model = get_model(model_name)
+        
+        if request.GET and request.GET.get('from_') and request.GET.get('to_'):
+            form = RangeDateFilterForm(request.GET)
+            if form.is_valid():
+                return TableView.as_view()(request)
+        else:
+            default_from = model.objects.aggregate(Min(field_name))[f'{field_name}__min']
+            default_to = model.objects.aggregate(Max(field_name))[f'{field_name}__max']
+
+            form = RangeDateFilterForm(initial={'from_': default_from, 'to_': default_to})
+            context['form_status'] = { 'successful': False }
+
+        context['form'] = form
+        context['action'] = reverse('filter-range-date-a', args=(model_name, field_name))
+
+        t = TemplateResponse(request, 'class_based_view_without_custom_manager/range-filter-form-fragment.html', context)
         t.render()
 
         return JsonResponse(

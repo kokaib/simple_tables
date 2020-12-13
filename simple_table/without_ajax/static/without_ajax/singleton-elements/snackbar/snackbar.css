@@ -1,0 +1,56 @@
+.snackbar {
+    --animation-duration: 375ms;
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: var(--height);
+    background-color: #00000099;
+}
+
+.snackbar.top {
+    --height: 5rem;
+    --cancel-top: calc(var(--height) / 2 - 1.5rem);
+    --cancel-right: 0.5rem;
+    top: 0;
+    border-bottom: 8px solid #ffe32b;
+}
+
+.snackbar.top.appending {
+    --animation-name: translate-from-to;
+    --x-from: 0;
+    --y-from: calc(-1 * var(--height));
+    --x-to: 0;
+    --y-to: 0;
+}
+
+.snackbar.top.removing {
+    --animation-name: translate-from-to;
+    --x-from: 0;
+    --y-from: 0;
+    --x-to: 0;
+    --y-to: calc(-1 * var(--height));
+}
+
+.snackbar.bottom {
+    --height: 9rem;
+    --cancel-top: calc(-1.5rem - 4px);
+    --cancel-right: 1rem;
+    bottom: 0;
+    border-top: 8px solid #ffe32b;
+}
+
+.snackbar.bottom.appending {
+    --animation-name: translate-from-to;
+    --x-from: 0;
+    --y-from: calc(100% + var(--y-from));
+    --x-to: 0;
+    --y-to: calc(100% - var(--y-from));
+}
+
+.snackbar.bottom.removing {
+    --animation-name: translate-from-to;
+    --x-from: 0;
+    --y-from: calc(100% - var(--y-from));
+    --x-to: 0;
+    --y-to: calc(100% + var(--y-from));
+}

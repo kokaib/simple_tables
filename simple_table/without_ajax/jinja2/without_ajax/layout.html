@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="shortcut icon" type="image/x-icon" href="{{ static('favicon.ico') }}"/>
+        <link rel="icon" type="image/x-icon" href="{{ static('favicon.ico') }}" />
+
+		<title> {{ title }}  </title>
+
+        {% block styles %}
+
+            <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/general/general.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/general/buttons.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/general/links.css') }}">
+        
+        {% endblock %}
+
+	</head>
+
+	<body>
+
+        {% block templates %}{% endblock %}
+
+        <header>
+
+            {% block header %}{% endblock %}
+
+        </header>
+
+
+
+        <main>
+
+            {% block main %}{% endblock %}
+
+        </main>
+
+
+
+		<footer>
+
+            {% block footer %}{% endblock %}
+
+        </footer>
+
+        {% block scripts %}{% endblock %}
+
+	</body>
+
+</html>

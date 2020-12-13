@@ -26,4 +26,5 @@ urlpatterns = [
     path('table-add-update-separately/', include('add_update_separately.urls')),
     path('table-with-model-formsets/', include('with_model_formsets.urls')),
     path('class-based-view-without-custom-manager/', include('class_based_view_without_custom_manager.urls')),
+    path('without-ajax/', include('without_ajax.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,9 +1,7 @@
 class SingletonElement extends Singleton {
     constructor(template) {
         super();
-
-        this.isAppended = false;
-        this.template = template;
+        this._template = template;
     }
 
     set template(value) {
@@ -11,16 +9,10 @@ class SingletonElement extends Singleton {
     }
 
     createInstance() {
-        console.log('SingletonElement: createInstance');
-
         return createElementFromTemplate(this._template);
     }
 
     appendInstance(elem) {
-        console.log('SingletonElement: appendInstance');
-
-        this.isAppended = true;
-
         if (this.instance.parentElement) this.instance.parentElement.removeChild(this.instance);
         this.instance.classList.remove('animatable');
         this.instance.classList.remove('removing');
@@ -28,17 +20,11 @@ class SingletonElement extends Singleton {
     }
 
     onAppendInstance(elem) {
-        console.log('SingletonElement: onAppendInstance');
-
         const parent = elem ? elem : document.body;
         parent.appendChild(this.instance);
     }
 
     removeInstance() {
-        console.log('SingletonElement: removeInstance');
-
-        this.isAppended = false;
-
         this.instance.classList.remove('animatable');
         this.instance.classList.remove('appending');
         this.instance.addEventListener('animationend', this.onRemoveInstance, {once: true});
@@ -46,8 +32,6 @@ class SingletonElement extends Singleton {
     }
 
     onRemoveInstance(ev) {
-        console.log('SingletonElement: onRemoveInstance');
-
         ev.target.remove();
     }
 }

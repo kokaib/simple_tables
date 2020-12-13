@@ -1,0 +1,133 @@
+ul.input-container li{
+  list-style: none;
+  position:relative;
+}
+
+label.tick-off-label{
+  position:absolute;
+  color:#888;
+  font-weight:600;
+  font-size:1rem;
+  top:1rem;
+  left:0;
+}
+
+input[type="checkbox"], input[type="radio"]{
+  margin-left:32px;
+  margin-right:0;
+  vertical-align:middle;
+}
+
+ul.input-container.toggler input[type="checkbox"],
+ul.input-container.toggler input[type="radio"] {
+  -webkit-appearance:none;
+  appearance:none;
+  width:32px;
+  height:16px;
+  border-radius:8px;
+  border:1px solid #e1e1e1;
+  outline:none;
+  background-color:#ccc;
+  position:relative;
+}
+
+ul.input-container.toggler input[type="checkbox"]:checked,
+ul.input-container.toggler input[type="radio"]:checked {
+  background-color:#ff595f;
+}
+
+ul.input-container.toggler input[type="checkbox"]::before,
+ul.input-container.toggler input[type="radio"]::before {
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1px solid #ccc;
+  position:absolute;
+  content:'';
+  top:-2px;
+  left:-3px;
+  background-color:#eb346b;
+  --transition-duration: 375ms;
+  -webkit-transition: all var(--transition-duration);
+  -ms-transition: all var(--transition-duration);
+  -o-transition: all var(--transition-duration);
+  -moz-transition: all var(--transition-duration);
+  transition: all var(--transition-duration);
+}
+
+ul.input-container.toggler input[type="checkbox"]:checked::before,
+ul.input-container.toggler input[type="radio"]:checked::before {
+  left:calc(100% - 16px);
+}
+
+
+input[type="checkbox"].toggler, input[type="radio"].toggler{
+  -webkit-appearance:none;
+  appearance:none;
+  width:32px;
+  height:16px;
+  border-radius:8px;
+  border:1px solid #e1e1e1;
+  outline:none;
+  background-color:#ccc;
+  position:relative;
+}
+
+input[type="checkbox"]:checked.toggler, input[type="radio"]:checked.toggler{
+  background-color:#ff595f;
+}
+
+input[type="checkbox"].toggler::before,input[type="radio"].toggler::before{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1px solid #ccc;
+  position:absolute;
+  content:'';
+  top:-2px;
+  left:-3px;
+  background-color:#eb346b;
+  --transition-duration: 375ms;
+  -webkit-transition: all var(--transition-duration);
+  -ms-transition: all var(--transition-duration);
+  -o-transition: all var(--transition-duration);
+  -moz-transition: all var(--transition-duration);
+  transition: all var(--transition-duration);
+}
+
+input[type="checkbox"]:checked.toggler::before, input[type="radio"]:checked.toggler::before{
+  left:calc(100% - 16px);
+}
+
+input[type="checkbox"].tick-off, input[type="radio"].tick-off{
+  margin:8px;
+  cursor:pointer;
+  -webkit-appearance:none;
+  appearance:none;
+  min-width:7rem;
+  height:3rem;
+  border-radius:16px;
+  padding:8px;
+  box-shadow:0 0 8px solid rgb(0,0,0,0.8);
+  outline:none;
+  background: linear-gradient(right, #e1e1e1, #ccc);
+  background: -webkit-linear-gradient(right, #e1e1e1, #ccc);
+  background: -o-linear-gradient(right, #e1e1e1, #ccc);
+  background: -moz-linear-gradient(right, #e1e1e1, #ccc);
+}
+
+input[type="checkbox"]:checked.tick-off,input[type="radio"]:checked.tick-off{
+  background: linear-gradient(right, #2e9ee8, #005fcc);
+  background: -webkit-linear-gradient(right, #2e9ee8, #005fcc);
+  background: -o-linear-gradient(right, #2e9ee8, #005fcc);
+  background: -moz-linear-gradient(right, #2e9ee8, #005fcc);
+}
+
+input[type="checkbox"]:checked.tick-off:active,input[type="radio"]:checked.tick-off:active{
+  box-shadow: 0 0 4px rgb(0,0,0,0.8);
+  -o-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+}

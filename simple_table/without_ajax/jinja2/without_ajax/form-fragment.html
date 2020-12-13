@@ -1,0 +1,36 @@
+{% extends 'without_ajax/form-layout.html' %}
+
+{% block main %}
+
+    {{ super() }}
+    
+    <form id="add-update-form" method="POST">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        
+        {% for field in form %}
+
+            <div class="input-field">
+                {{ field.label_tag() }}
+                <div class="input-container flex">
+
+                    {{ field }}
+                    
+                </div>
+
+                {% if field.help_text %}
+                    <p class="helptext">{{ field.help_text|safe }}</p>
+                {% endif %}
+
+                {{ field.errors }}
+
+            </div>
+                
+        {% endfor %}
+
+        {{ form.non_field_errors() }}
+
+        <button type="submit">OK</button>
+
+    </form>
+
+{% endblock %}

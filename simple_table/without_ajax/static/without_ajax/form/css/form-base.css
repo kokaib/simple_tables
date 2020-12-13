@@ -1,0 +1,107 @@
+form {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.errorlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #ff0000;
+}
+
+.errorlist.nonfield {
+
+}
+
+.helptext {
+  
+}
+
+fieldset{
+  position: relative;
+  border: 2px solid black;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+}
+
+legend{
+  position: absolute;
+  top: -0.9rem;
+  left: 0;
+  padding: 0.25rem;
+  font-weight: bold;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+label{
+  font-weight: bold;
+  padding: 0.25rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+label.absolute{
+  position: absolute;
+  
+}
+
+.input-field{
+  margin: 0.5rem;
+}
+
+.input-field.flex .input-container{
+  flex: 1;
+  text-align: center;
+}
+
+.input-container{
+  --transition-duration: 375ms;
+  --animation-duration: 375ms;
+  position: relative;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid #00000080;
+  box-shadow: 0 0 8px #000;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.input-container.flex > * {
+  flex: 1;
+}
+
+.input-container.no-appearance {
+  border-radius: none;
+  border: none;
+  box-shadow: none;
+}
+
+.input-container.invalid {
+  border: 3px solid #ff0000;
+}
+
+input, select, textarea, progress, meter {
+  font-family: inherit;
+  font-size: 100%;
+  box-sizing: border-box;
+}
+
+input:not([type="image"]), select, textarea, progress, meter {
+  padding: 0.125rem;
+  margin: 0.125rem;
+}
+
+select {
+  background-color:inherit;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="image"]):not([type="file"]):not([type="color"]):not([type="range"]), select, textarea, progress, meter{
+  border: none;
+  outline: none;
+}
+
+input:not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="image"]):not([type="file"]):not([type="color"]):not([type="range"]):focus, textarea:focus{
+  border-bottom: 2px solid black;
+}

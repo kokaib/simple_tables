@@ -1,0 +1,21 @@
+.cancel-container {
+    text-align: right;
+}
+
+.cancel {
+    --cancel-size: 2.5rem;
+    padding: 0;
+    margin: var(--cancel-top) var(--cancel-right);
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: #fff;
+    width: var(--cancel-size);
+    height: var(--cancel-size);
+}
+
+.cancel::before {
+    color: #ff0000;
+    font-size: calc(var(--cancel-size) - 0.5rem);
+    font-weight: 900;
+    content: '\d7';
+}

@@ -1,0 +1,129 @@
+{% extends 'without_ajax/layout.html' %}
+
+{% block styles %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/table/table.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/form/css/form-base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/form/css/text-form-controls.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('without_ajax/form/css/checkable-form-controls.css') }}">
+
+    <style>
+
+
+
+    </style>
+
+{% endblock %}
+
+{% block main %}
+
+    {{ super() }}
+
+    <div id="table-container">
+
+        <header>
+
+            <div class="pagination">
+                <span class="step">
+                    {% if page_obj.has_previous() %}
+                        <button onclick="pageTo(1)">&laquo; first</button>
+                        <button onclick="pageTo({{ page_obj.previous_page_number() }})">&lsaquo; previous</button>
+                    {% endif %}
+        
+                    <span class="current">
+                        <div class="inline" method="GET">
+                            <div class="input-container inline-block">
+                                <input id="seeker" name="page" class="inline" type="number" min="0" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
+                            </div>
+                            / {{ page_obj.paginator.num_pages }}
+                            <button onclick="pageTo(document.querySelector('#seeker').value)">Go</button>
+                        </div>
+                    </span>
+        
+                    {% if page_obj.has_next() %}
+                        <button onclick="pageTo({{ page_obj.next_page_number() }})">next &rsaquo;</button>
+                        <button onclick="pageTo({{ page_obj.paginator.num_pages }})">last &raquo;</button>
+                    {% endif %}
+                </span>
+            </div>
+        
+        </header>
+        
+        
+        <a href="add/"><button>Add</button></a>
+        
+        <main class="table-wrapper">
+        
+            <table>
+                <thead>
+        
+                    <tr>
+                        {% for column in table_columns %}
+                            <th>
+                                <div>
+                                    <div class="column-name-wrapper">
+                                        <h1> {{ column.display_name }} </h1>
+                                    </div>
+                                    {% if 'filterable' in column.options %}
+                                        {% if 'categorical' in column.options %}
+                                            <a href="{{ url('filter-categorical', args=('Model2', column.name)) }}{% if request.GET.urlencode() != '' %}?state={{ request.GET.urlencode()|urlencode }}{% endif %}"><button class="filter-button"></button></a>
+                                        {% elif 'range' in column.options %}
+                                            {% if 'range_number' in column.options %}
+                                                <a href="filter-range-number/Model2/{{ column.name }}{% if request.GET.urlencode() != '' %}?state={{ request.GET.urlencode()|urlencode }}{% endif %}"><button class="filter-button"></button></a>
+                                            {% elif 'range_date' in column.options %}
+                                                <a href="filter-range-date/Model2/{{ column.name }}{% if request.GET.urlencode() != '' %}?state={{ request.GET.urlencode()|urlencode }}{% endif %}"><button class="filter-button"></button></a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </th>
+                        {% endfor %}
+                    </tr>
+        
+                </thead>
+        
+                <tbody>
+        
+                    {% if table_rows %}
+        
+                        {% for row in table_rows %}
+                            <tr id="{{ row.get_id() }}" class="animatable {% if 'highlighted' in row.get_row_options() %}highlighted{% endif %}" onclick="startUpdate(event)">
+                                {% for column in table_columns %}
+                                    <td>{{ row[column.name] }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+        
+                    {% else %}
+        
+                        <td colspan="{{ table_columns|length }}">No records to display.</td>
+        
+                    {% endif %}
+        
+                </tbody>
+        
+            </table>
+        
+        </main>
+        
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script type="text/javascript" src="{{ static('without_ajax/paginator/paginator.js') }}"></script>
+
+    <script>
+
+        function startUpdate(ev) {
+            var location = `update/${ev.target.closest('tr').id}`;
+            window.location = location;
+        }
+
+    </script>
+
+{% endblock %}

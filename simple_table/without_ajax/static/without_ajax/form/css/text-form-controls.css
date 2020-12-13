@@ -1,0 +1,10 @@
+textarea{
+  resize: none;
+}
+
+.input-container.textarea-container p.char-calculator{
+  position: absolute;
+  background: inherit;
+  right: 1rem;
+  bottom: 0;
+}
